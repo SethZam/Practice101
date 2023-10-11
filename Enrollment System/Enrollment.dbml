@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="enrollment" Class="EnrollmentDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=DESKTOP-H27FGSQ\SQLEXPRESS;Initial Catalog=enrollment;Integrated Security=True" SettingsObjectName="Enrollment_System.Properties.Settings" SettingsPropertyName="enrollmentConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.admin" Member="admins">
+    <Type Name="admin">
+      <Column Name="admin_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="username" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="pass" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.stud_account" Member="stud_accounts">
+    <Type Name="stud_account">
+      <Column Name="stud_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="stud_username" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="stud_password" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="stud_fname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="stud_mname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="stud_lname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="stud_bd" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="stud_age" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="stud_address" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="stud_email" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="stud_tel" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="stud_isActive" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="stud_account_enrollment_tbl" Member="enrollment_tbls" ThisKey="stud_id" OtherKey="stud_id" Type="enrollment_tbl" />
+    </Type>
+  </Table>
+  <Table Name="dbo.course_tbl" Member="course_tbls">
+    <Type Name="course_tbl">
+      <Column Name="course_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="course_name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="course_tbl_enrollment_tbl" Member="enrollment_tbls" ThisKey="course_id" OtherKey="course_id" Type="enrollment_tbl" />
+      <Association Name="course_tbl_subject_tbl" Member="subject_tbls" ThisKey="course_id" OtherKey="course_id" Type="subject_tbl" />
+    </Type>
+  </Table>
+  <Table Name="dbo.enrollment_tbl" Member="enrollment_tbls">
+    <Type Name="enrollment_tbl">
+      <Column Name="enrollment_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="enrollment_yearlevel" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="enrollment_date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="enrollment_status" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="stud_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="course_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="course_tbl_enrollment_tbl" Member="course_tbl" ThisKey="course_id" OtherKey="course_id" Type="course_tbl" IsForeignKey="true" />
+      <Association Name="stud_account_enrollment_tbl" Member="stud_account" ThisKey="stud_id" OtherKey="stud_id" Type="stud_account" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ins_tbl" Member="ins_tbls">
+    <Type Name="ins_tbl">
+      <Column Name="ins_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ins_fname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ins_lname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="subject_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="subject_tbl_ins_tbl" Member="subject_tbl" ThisKey="subject_id" OtherKey="subject_id" Type="subject_tbl" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.subject_tbl" Member="subject_tbls">
+    <Type Name="subject_tbl">
+      <Column Name="subject_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="subject_code" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="subject_name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="subject_unit" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="course_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ins_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="subject_tbl_ins_tbl" Member="ins_tbls" ThisKey="subject_id" OtherKey="subject_id" Type="ins_tbl" />
+      <Association Name="course_tbl_subject_tbl" Member="course_tbl" ThisKey="course_id" OtherKey="course_id" Type="course_tbl" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.check_password" Method="check_password">
+    <Parameter Name="username" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="pass" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="check_passwordResult">
+      <Column Name="pass" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.check_username" Method="check_username">
+    <Parameter Name="username" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="check_usernameResult">
+      <Column Name="username" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.create_account" Method="create_account">
+    <Parameter Name="user" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="password" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="fname" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="mname" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="lname" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="bd" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="age" Type="System.Int32" DbType="Int" />
+    <Parameter Name="addrss" Type="System.String" DbType="VarChar(MAX)" />
+    <Parameter Name="email" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="tel" Type="System.String" DbType="VarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.check_studentacc" Method="check_studentacc">
+    <Parameter Name="user" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="check_studentaccResult">
+      <Column Name="stud_username" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.check_studentpass" Method="check_studentpass">
+    <Parameter Name="user" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="pass" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="check_studentpassResult">
+      <Column Name="stud_username" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.get_course" Method="get_course">
+    <ElementType Name="get_courseResult">
+      <Column Name="course_name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.get_info" Method="get_info">
+    <Parameter Name="user" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="get_infoResult">
+      <Column Name="stud_lname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="stud_fname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="stud_mname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+</Database>
